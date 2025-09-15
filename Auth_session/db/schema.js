@@ -8,3 +8,6 @@ export const usersTable = pgTable("users", {
   password : text().notNull(),
   salt : text().notNull()
 });
+export default {
+  usersTable
+}
