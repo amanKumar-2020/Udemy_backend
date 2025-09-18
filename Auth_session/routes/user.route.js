@@ -1,5 +1,5 @@
 import express from "express";
-import { usersTable } from "../db/schema.js";
+import { usersTable , userSession} from "../db/schema.js";
 import db from "../db/index.js";
 
 import { eq } from "drizzle-orm";
@@ -76,7 +76,13 @@ router.post("/login", async (req, res) => {
           message: "Invalid credentials",
         });
       }else{
-        return res.json({ status: "success", userId: exitingUser.id });
+        const [session] = await db 
+        .insert(userSession)
+        .values({
+          userId: exitingUser.id,
+        }).returning({id: userSession.id})
+
+        return res.json({ status: "success", sessionId: session.id });
       }
     }
 });
